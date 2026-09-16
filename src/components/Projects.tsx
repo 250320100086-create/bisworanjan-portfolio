@@ -1,74 +1,164 @@
-import React from 'react';
-import { HeartPulse, MessageSquareText, Image as ImageIcon, LineChart, ArrowRight } from 'lucide-react';
+import React, { memo } from 'react';
+import {
+  ShieldAlert,
+  Eye,
+  MessageSquareCode,
+  UserCheck,
+  HeartPulse,
+  Github,
+  ExternalLink,
+} from 'lucide-react';
 
-const PROJECTS = [
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  icon: React.ElementType;
+  iconColor: string;
+  githubUrl: string;
+  liveDemoUrl?: string;
+}
+
+const PROJECTS: Project[] = [
   {
-    title: 'Heart Disease Prediction',
+    id: 'cybershield',
+    title: 'CyberShield Analytics Platform',
+    description:
+      'Advanced machine learning platform for cybersecurity threat detection, network log anomaly analysis, and automated risk scoring.',
+    technologies: ['Python', 'Machine Learning', 'FastAPI', 'SQL'],
+    icon: ShieldAlert,
+    iconColor: 'text-fuchsia-400',
+    githubUrl: 'https://github.com/250320100086-create',
+  },
+  {
+    id: 'ai-drone',
+    title: 'AI Drone Surveillance System',
+    description:
+      'Real-time autonomous drone surveillance system leveraging computer vision models for object tracking and anomaly alerts.',
+    technologies: ['Python', 'Computer Vision', 'AI/ML', 'FastAPI', 'SQL'],
+    icon: Eye,
+    iconColor: 'text-blue-400',
+    githubUrl: 'https://github.com/250320100086-create',
+  },
+  {
+    id: 'ai-chatbot',
+    title: 'AI Chatbot',
+    description:
+      'Intelligent NLP conversational assistant featuring natural language understanding, intent parsing, and dynamic response generation.',
+    technologies: ['Python', 'NLP', 'FastAPI', 'SQL', 'JavaScript'],
+    icon: MessageSquareCode,
+    iconColor: 'text-purple-400',
+    githubUrl: 'https://github.com/250320100086-create',
+  },
+  {
+    id: 'attendance-system',
+    title: 'AI Student Attendance System',
+    description:
+      'Automated biometric attendance management system utilizing facial recognition neural networks and automated SQL record management.',
+    technologies: ['Python', 'AI/ML', 'Face Recognition', 'FastAPI', 'SQL'],
+    icon: UserCheck,
+    iconColor: 'text-emerald-400',
+    githubUrl: 'https://github.com/250320100086-create',
+  },
+  {
+    id: 'heart-disease',
+    title: 'Heart Disease Prediction System',
+    description:
+      'Predictive healthcare classification system assessing cardiovascular risk using patient attributes and Scikit-learn algorithms.',
+    technologies: ['Python', 'Machine Learning', 'Scikit-learn', 'Flask'],
     icon: HeartPulse,
-    tags: ['ML', 'Python', 'Scikit-learn'],
-    description: 'ML model to predict heart disease using classification algorithms.',
-    iconColor: 'text-fuchsia-500'
+    iconColor: 'text-red-400',
+    githubUrl: 'https://github.com/250320100086-create',
+    liveDemoUrl: '/heart-disease.html',
   },
-  {
-    title: 'Chatbot using NLP',
-    icon: MessageSquareText,
-    tags: ['NLP', 'Python', 'TensorFlow'],
-    description: 'Intelligent chatbot using NLP and deep learning techniques.',
-    iconColor: 'text-blue-400'
-  },
-  {
-    title: 'Image Classification',
-    icon: ImageIcon,
-    tags: ['DL', 'Python', 'CNN'],
-    description: 'CNN model to classify images with high accuracy.',
-    iconColor: 'text-purple-400'
-  },
-  {
-    title: 'Stock Price Prediction',
-    icon: LineChart,
-    tags: ['ML', 'Time Series', 'Python'],
-    description: 'Time-series model to predict stock prices using LSTM.',
-    iconColor: 'text-blue-500'
-  }
 ];
 
-export function Projects() {
+export const Projects = memo(function Projects() {
   return (
-    <section className="py-10">
+    <section id="projects" className="py-10">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-semibold text-white">Featured Projects</h2>
-        <button className="px-4 py-2 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] text-gray-300 rounded-lg text-sm transition-colors">
-          View All Projects
-        </button>
+        <div>
+          <h2 className="text-2xl font-semibold text-white">Featured AI & Machine Learning Projects</h2>
+          <p className="text-xs text-gray-400 mt-1">Real-world intelligent systems built with Python, ML & Computer Vision</p>
+        </div>
+        <a
+          href="https://github.com/250320100086-create"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] hover:border-fuchsia-500/40 text-gray-300 hover:text-white rounded-xl text-xs font-medium transition-all flex items-center gap-2"
+        >
+          <Github size={14} /> View All Repositories
+        </a>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {PROJECTS.map((project, i) => (
-          <div key={i} className="group bg-[#13141C] border border-[#1F212A] rounded-2xl p-6 hover:border-blue-500/30 hover:bg-[#151620] transition-all duration-300 flex flex-col">
-            <div className="mb-6">
-              <project.icon size={42} strokeWidth={1.5} className={`${project.iconColor} mb-2`} />
-            </div>
-            
-            <h3 className="text-white font-medium mb-3 text-lg">{project.title}</h3>
-            
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.tags.map(tag => (
-                <span key={tag} className="text-[10px] px-2 py-1 bg-[#1A1C23] border border-[#2A2D3A] text-gray-400 rounded-md">
-                  {tag}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {PROJECTS.map((project) => (
+          <div
+            key={project.id}
+            className="group bg-[#13141C] border border-[#1F212A] rounded-2xl p-6 hover:border-fuchsia-500/40 hover:bg-[#151620] transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-5">
+                <div className={`p-3 bg-[#1A1C23] border border-[#2A2D3A] rounded-xl ${project.iconColor}`}>
+                  <project.icon size={24} />
+                </div>
+                <span className="text-[10px] font-mono text-gray-400 bg-[#1A1C23] border border-[#2A2D3A] px-2.5 py-1 rounded-md">
+                  AI / ML
                 </span>
-              ))}
+              </div>
+
+              <h3 className="text-white font-medium text-lg mb-2 group-hover:text-fuchsia-300 transition-colors">
+                {project.title}
+              </h3>
+
+              <p className="text-sm text-gray-400 leading-relaxed mb-5">
+                {project.description}
+              </p>
+
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {project.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="text-[11px] px-2.5 py-1 bg-[#1A1C23] border border-[#2A2D3A] text-gray-300 rounded-md"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
-            
-            <p className="text-sm text-gray-400 mb-6 flex-1">
-              {project.description}
-            </p>
-            
-            <a href="#" className="flex items-center gap-2 text-sm text-fuchsia-400 hover:text-fuchsia-300 transition-colors mt-auto group-hover:gap-3 duration-300">
-              View Project <ArrowRight size={14} />
-            </a>
+
+            <div className="flex items-center gap-3 pt-4 border-t border-[#1F212A]">
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2 px-3 bg-[#1A1C23] hover:bg-[#222530] border border-[#2A2D3A] hover:border-fuchsia-500/50 text-white rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5"
+              >
+                <Github size={14} /> GitHub Code
+              </a>
+
+              {project.liveDemoUrl ? (
+                <a
+                  href={project.liveDemoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-2 px-3 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 text-white rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 shadow-md shadow-fuchsia-500/20"
+                >
+                  <ExternalLink size={14} /> Live Demo
+                </a>
+              ) : (
+                <span
+                  title="Live deployment in progress"
+                  className="flex-1 py-2 px-3 bg-[#1A1C23]/60 border border-[#2A2D3A]/60 text-gray-500 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 cursor-not-allowed opacity-75"
+                >
+                  Demo Unavailable
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>
     </section>
   );
-}
+});

@@ -1,43 +1,128 @@
-import React from 'react';
-import { Terminal, BrainCircuit, Network, BarChart3, Database, PieChart } from 'lucide-react';
+import React, { memo } from 'react';
+import {
+  Code,
+  Brain,
+  BarChart,
+  Globe,
+  Server,
+  Database,
+  Binary,
+  Wrench,
+  Cloud,
+} from 'lucide-react';
 
-const SKILLS = [
-  { name: 'Python', percentage: 90, icon: Terminal, color: 'from-yellow-400 to-yellow-600' },
-  { name: 'Machine Learning', percentage: 90, icon: BrainCircuit, color: 'from-pink-500 to-fuchsia-600' },
-  { name: 'Deep Learning', percentage: 85, icon: Network, color: 'from-blue-500 to-indigo-600' },
-  { name: 'Data Analysis', percentage: 85, icon: BarChart3, color: 'from-orange-400 to-red-500' },
-  { name: 'SQL & Databases', percentage: 80, icon: Database, color: 'from-teal-400 to-emerald-600' },
-  { name: 'Data Visualization', percentage: 80, icon: PieChart, color: 'from-purple-400 to-indigo-500' },
+const SKILL_CATEGORIES = [
+  {
+    category: 'Programming Languages',
+    icon: Code,
+    color: 'text-yellow-400',
+    skills: ['Python', 'Java', 'C'],
+  },
+  {
+    category: 'Artificial Intelligence & Machine Learning',
+    icon: Brain,
+    color: 'text-fuchsia-400',
+    skills: [
+      'Machine Learning',
+      'Supervised Learning',
+      'Unsupervised Learning',
+      'Regression & Classification',
+      'Support Vector Machines (SVM)',
+      'Decision Trees',
+      'Clustering & PCA',
+      'Model Evaluation',
+    ],
+  },
+  {
+    category: 'Data Science & Analytics',
+    icon: BarChart,
+    color: 'text-orange-400',
+    skills: [
+      'NumPy',
+      'Pandas',
+      'Matplotlib',
+      'Scikit-learn',
+      'Data Preprocessing',
+      'Exploratory Data Analysis (EDA)',
+      'Feature Engineering',
+    ],
+  },
+  {
+    category: 'Web Development',
+    icon: Globe,
+    color: 'text-blue-400',
+    skills: ['HTML5', 'CSS3', 'JavaScript (ES6+)', 'React.js', 'Tailwind CSS'],
+  },
+  {
+    category: 'Backend Development',
+    icon: Server,
+    color: 'text-green-400',
+    skills: ['FastAPI', 'Spring Boot', 'RESTful APIs', 'Java Web Services'],
+  },
+  {
+    category: 'Databases & Storage',
+    icon: Database,
+    color: 'text-teal-400',
+    skills: ['SQL', 'PostgreSQL', 'DBMS Concepts', 'Relational Schemas'],
+  },
+  {
+    category: 'Data Structures & Algorithms',
+    icon: Binary,
+    color: 'text-purple-400',
+    skills: [
+      'Arrays & Linked Lists',
+      'Stacks & Queues',
+      'Trees & Graphs',
+      'Searching & Sorting Algorithms',
+    ],
+  },
+  {
+    category: 'Developer Tools',
+    icon: Wrench,
+    color: 'text-emerald-400',
+    skills: ['Git', 'GitHub', 'Maven', 'VS Code', 'IntelliJ IDEA', 'Jupyter Notebooks'],
+  },
+  {
+    category: 'Cloud & Specialized Domains',
+    icon: Cloud,
+    color: 'text-indigo-400',
+    skills: ['AWS Concepts', 'Internet of Things (IoT)', 'Computer Networks', 'Information Security'],
+  },
 ];
 
-export function Skills() {
+export const Skills = memo(function Skills() {
   return (
-    <section className="py-10">
+    <section id="skills" className="py-10">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-semibold text-white">My Skills</h2>
-        <button className="px-4 py-2 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] text-gray-300 rounded-lg text-sm transition-colors">
-          View All
-        </button>
+        <div>
+          <h2 className="text-2xl font-semibold text-white">Technical Skills & Expertise</h2>
+          <p className="text-xs text-gray-400 mt-1">Comprehensive skill set derived from coursework, labs & project development</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {SKILLS.map((skill) => (
-          <div key={skill.name} className="bg-[#13141C] border border-[#1F212A] rounded-2xl p-5 hover:border-[#2A2D3A] transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-2.5 bg-[#1A1C23] rounded-lg text-blue-400 border border-[#2A2D3A]">
-                <skill.icon size={20} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {SKILL_CATEGORIES.map((cat) => (
+          <div
+            key={cat.category}
+            className="bg-[#13141C] border border-[#1F212A] rounded-2xl p-6 hover:border-fuchsia-500/30 hover:bg-[#151620] transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2.5 bg-[#1A1C23] border border-[#2A2D3A] rounded-xl ${cat.color}`}>
+                  <cat.icon size={20} />
+                </div>
+                <h3 className="text-white font-medium text-base">{cat.category}</h3>
               </div>
-              <h3 className="text-white font-medium flex-1">{skill.name}</h3>
-              <span className="text-xs font-semibold text-gray-400">{skill.percentage}%</span>
-            </div>
-            {/* Progress Bar */}
-            <div className="h-1.5 w-full bg-[#1A1C23] rounded-full overflow-hidden">
-              <div 
-                className={`h-full bg-gradient-to-r ${skill.color} rounded-full relative`}
-                style={{ width: `${skill.percentage}%` }}
-              >
-                {/* Glow effect at the end of the bar */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white/20 blur-sm rounded-full"></div>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                {cat.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-xs font-medium px-2.5 py-1 bg-[#1A1C23] border border-[#2A2D3A] text-gray-300 rounded-lg hover:border-fuchsia-500/40 hover:text-white transition-colors"
+                  >
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -45,4 +130,4 @@ export function Skills() {
       </div>
     </section>
   );
-}
+});

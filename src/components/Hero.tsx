@@ -1,95 +1,202 @@
-import React from 'react';
-import { Send, Download, ArrowRight } from 'lucide-react';
-import profileImage from "../assets/images/profile.jpg.jpeg"
+import React, { useRef } from 'react';
+import { Send, Download, ArrowRight, MapPin, Mail, Github, Linkedin, Instagram } from "lucide-react";
+import profilePhoto from "./assets/images/profile.jpg";
+
+export const INSTAGRAM_URL = "https://www.instagram.com/s1punn._/?__pwa=1";
+export const GITHUB_URL = "https://github.com/250320100086-create";
+export const LINKEDIN_URL = "https://www.linkedin.com/in/bisworanjan-palar";
+export const EMAIL_ADDRESS = "bisworanjanpalar@gmail.com";
 
 export function Hero() {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateY = ((x / rect.width) - 0.5) * 16;
+    const rotateX = -((y / rect.height) - 0.5) * 16;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+    card.style.boxShadow = "0 25px 60px rgba(217, 70, 239, 0.35)";
+  };
+
+  const handleLeave = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)";
+    card.style.boxShadow = "0 15px 35px rgba(217, 70, 239, 0.2)";
+  };
+
+  const scrollToContact = () => {
+    const el = document.getElementById('contact');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToProjects = () => {
+    const el = document.getElementById('projects');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="relative pt-8 pb-16">
-      {/* Top Navbar */}
-      <header className="flex items-center justify-between mb-16 hidden md:flex">
-        <nav className="flex items-center gap-8 text-sm font-medium">
-          <a href="#" className="text-white relative">
-            Home
-            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-fuchsia-500 rounded-full"></span>
-          </a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">About</a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">Skills</a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">Projects</a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">Experience</a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">Education</a>
-          <a href="#" className="text-gray-400 hover:text-white transition-colors">Contact</a>
+    <div id="home" className="relative pt-6 pb-16">
+      {/* Navigation Header */}
+      <header className="items-center justify-between mb-12 max-md:hidden flex bg-[#13141C]/80 border border-[#1F212A] rounded-2xl px-6 py-3.5 backdrop-blur-md sticky top-4 z-40">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 to-blue-500 tracking-tighter">
+            BP
+          </span>
+          <span className="text-xs text-gray-400 font-medium pl-2 border-l border-[#2A2D3A]">
+            Bisworanjan Palar
+          </span>
+        </div>
+
+        <nav className="flex items-center gap-6 text-sm font-medium">
+          <a href="#home" className="text-white hover:text-fuchsia-400 transition-colors">Home</a>
+          <a href="#skills" className="text-gray-400 hover:text-white transition-colors">Skills</a>
+          <a href="#projects" className="text-gray-400 hover:text-white transition-colors">Projects</a>
+          <a href="#education" className="text-gray-400 hover:text-white transition-colors">Education</a>
+          <a href="#experience" className="text-gray-400 hover:text-white transition-colors">Experience</a>
+          <a href="#certifications" className="text-gray-400 hover:text-white transition-colors">Certifications</a>
+          <a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a>
         </nav>
-        <button className="py-2.5 px-5 bg-[#1A1C23] border border-[#2A2D3A] hover:bg-[#222530] text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2">
-          Let's Talk <Send size={14} className="text-gray-400" />
+
+        <button
+          onClick={scrollToContact}
+          className="py-2 px-4 bg-[#1A1C23] border border-[#2A2D3A] hover:bg-fuchsia-600/20 hover:border-fuchsia-500/50 text-white rounded-xl text-xs font-medium transition-all flex items-center gap-2 group"
+        >
+          Let's Talk <Send size={13} className="text-fuchsia-400 transition-transform group-hover:translate-x-0.5" />
         </button>
       </header>
 
-      {/* Hero Content */}
-      <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
+      {/* Hero Grid */}
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 pt-4">
 
-        {/* Left Text Content */}
+        {/* Left Column */}
         <div className="flex-1 space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-xl md:text-2xl font-medium text-white">Hello, I'm</h2>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-tight">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#13141C] border border-[#2A2D3A] text-xs text-gray-300">
+              <MapPin size={13} className="text-fuchsia-400" />
+              <span>Bhubaneswar, Odisha, India</span>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 via-purple-500 to-blue-500">
                 Bisworanjan
               </span>
               <br />
               Palar
             </h1>
-            <h3 className="text-2xl md:text-3xl text-gray-300 font-medium mt-4">
-              AI & Machine Learning <span className="text-fuchsia-400">Student</span>
-            </h3>
+
+            <h2 className="text-xl md:text-2xl text-gray-300 font-medium pt-1">
+              AI & Machine Learning <span className="text-fuchsia-400 font-semibold">Developer</span>
+            </h2>
           </div>
 
-          <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
-            Passionate about building intelligent systems and solving real-world problems with data, models and code.
+          <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-xl">
+            MCA candidate at Centurion University specializing in Artificial Intelligence & Machine Learning. Passionate about building predictive models, computer vision systems, backend APIs, and data-driven solutions.
           </p>
 
+          {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button className="py-3 px-6 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 text-white rounded-xl font-medium transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20">
-              View My Work <ArrowRight size={18} />
+            <button
+              onClick={scrollToProjects}
+              className="py-3 px-6 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-fuchsia-500/20 group hover:scale-[1.02] active:scale-[0.98]"
+            >
+              View My Work <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="py-3 px-6 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] text-white rounded-xl font-medium transition-all flex items-center gap-2">
-              Download CV <Download size={18} />
+
+            <a
+              href="/resume.pdf"
+              download="Bisworanjan_Palar_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Download Resume PDF"
+              className="py-3 px-6 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] hover:border-fuchsia-500/40 text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2 group hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Download Resume <Download size={16} className="text-fuchsia-400 transition-transform group-hover:translate-y-0.5" />
+            </a>
+
+            <button
+              onClick={scrollToContact}
+              className="py-3 px-6 border border-[#2A2D3A] bg-[#13141C] hover:bg-[#1A1C23] text-gray-300 hover:text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+            >
+              Get In Touch <Send size={15} />
             </button>
           </div>
 
-          <div className="pt-8 space-y-3">
-            <p className="text-sm text-gray-400">Technologies I Work With</p>
-            <div className="flex flex-wrap items-center gap-3">
-              {['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'OpenCV', 'Pandas'].map((tech, i) => (
-                <div key={tech} className="flex items-center gap-2 px-3 py-1.5 bg-[#13141C] border border-[#1F212A] rounded-lg text-sm text-gray-300">
-                  {/* Generic colored dot as pseudo-icon */}
-                  <span className={`w-2 h-2 rounded-full ${['bg-blue-400', 'bg-orange-400', 'bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-purple-500'][i % 6]
-                    }`}></span>
-                  {tech}
-                </div>
-              ))}
-            </div>
+          {/* Social Icons */}
+          <div className="flex items-center gap-3 pt-3">
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 bg-[#13141C] border border-[#1F212A] hover:border-fuchsia-500/50 hover:text-fuchsia-400 rounded-xl text-gray-400 transition-colors"
+              title="GitHub"
+              aria-label="GitHub Profile"
+            >
+              <Github size={18} />
+            </a>
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 bg-[#13141C] border border-[#1F212A] hover:border-blue-500/50 hover:text-blue-400 rounded-xl text-gray-400 transition-colors"
+              title="LinkedIn"
+              aria-label="LinkedIn Profile"
+            >
+              <Linkedin size={18} />
+            </a>
+            <a
+              href={`mailto:${EMAIL_ADDRESS}`}
+              className="p-2.5 bg-[#13141C] border border-[#1F212A] hover:border-purple-500/50 hover:text-purple-400 rounded-xl text-gray-400 transition-colors"
+              title="Email"
+              aria-label="Email Bisworanjan"
+            >
+              <Mail size={18} />
+            </a>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 bg-[#13141C] border border-[#1F212A] hover:border-pink-500/50 hover:text-pink-400 rounded-xl text-gray-400 transition-colors"
+              title="Instagram"
+              aria-label="Instagram Profile"
+            >
+              <Instagram size={18} />
+            </a>
           </div>
         </div>
 
-        {/* Right Image */}
+        {/* Right Column: Actual Profile Photo */}
         <div className="flex-1 relative flex justify-center lg:justify-end">
-          {/* Glowing Background Rings */}
           <div className="absolute inset-0 max-w-md mx-auto flex items-center justify-center pointer-events-none">
-            <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full border border-blue-500/20 absolute animate-spin-slow"></div>
-            <div className="w-[250px] h-[250px] md:w-[380px] md:h-[380px] rounded-full border border-purple-500/20 absolute -rotate-45"></div>
-            <div className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] bg-gradient-to-tr from-blue-600/30 via-purple-600/30 to-fuchsia-600/30 rounded-full blur-[80px] absolute"></div>
+            <div className="w-[280px] h-[280px] md:w-[420px] md:h-[420px] rounded-full border border-blue-500/20 absolute animate-spin-slow" />
+            <div className="w-[230px] h-[230px] md:w-[350px] md:h-[350px] rounded-full border border-fuchsia-500/20 absolute -rotate-45" />
+            <div className="w-[180px] h-[180px] md:w-[280px] md:h-[280px] bg-gradient-to-tr from-fuchsia-600/30 via-purple-600/30 to-blue-600/30 rounded-full blur-[70px] absolute" />
           </div>
 
-          {/* Main Subject Image - Using a placeholder that fits the vibe */}
-          <div className="relative z-10 w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-full overflow-hidden border-2 border-transparent bg-gradient-to-b from-transparent to-[#0B0C10]">
-            {/* Note: In a real app, this would be the actual image. Using an Unsplash placeholder of a man in sunglasses with a dark background to mimic the provided design. */}
+          <div
+            ref={cardRef}
+            onMouseMove={handleMove}
+            onMouseLeave={handleLeave}
+            className="group relative z-10 w-[270px] h-[270px] md:w-[390px] md:h-[390px] rounded-3xl overflow-hidden border-2 border-fuchsia-500/40 bg-[#13141C] transition-all duration-200 cursor-pointer shadow-2xl"
+          >
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-blue-500 opacity-30 blur-xl scale-105 -z-10" />
+
             <img
-              src={profileImage}
+              src={profilePhoto}
               alt="Bisworanjan Palar"
-              className="w-full h-full object-cover object-top mix-blend-luminosity hover:mix-blend-normal transition-all duration-500 opacity-90"
+              loading="eager"
+              decoding="async"
+              className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             />
-            {/* Gradient overlay to blend bottom */}
-            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0C10] to-transparent"></div>
+
+            <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0B0C10] via-[#0B0C10]/30 to-transparent" />
           </div>
         </div>
 
