@@ -162,6 +162,48 @@ const MessageBubble = memo(({ msg, onRetry }: { msg: ChatMessage; onRetry?: () =
 });
 MessageBubble.displayName = 'MessageBubble';
 
+const SUGGESTED_QUESTIONS = [
+  'Tell me about your projects',
+  'What technologies do you use?',
+  'Tell me about your AI/ML projects',
+  'How can I contact you?',
+  'Can I download your resume?',
+];
+
+function getVerifiedClientAnswer(query: string): string | null {
+  const q = query.toLowerCase();
+
+  if (q.includes('project') || q.includes('work') || q.includes('build')) {
+    return `Bisworanjan has developed **5 featured AI & ML projects**:\n\n1. **CyberShield Analytics Platform** (Python, ML, FastAPI, SQL) — Cybersecurity threat detection & network log anomaly scoring.\n2. **AI Drone Surveillance System** (Python, Computer Vision, FastAPI) — Aerial autonomous object detection & anomaly alerting.\n3. **AI Chatbot** (Python, NLP, FastAPI, SQL, JS) — Natural language conversational assistant.\n4. **AI Student Attendance System** (Python, Face Recognition, FastAPI) — Facial biometric authentication & automated SQL logging.\n5. **Heart Disease Prediction System** (Python, Scikit-learn, Flask) — Cardiovascular clinical risk classification model.\n\nAll source code is available on [GitHub](https://github.com/250320100086-create).`;
+  }
+
+  if (q.includes('technolog') || q.includes('skill') || q.includes('stack') || q.includes('tool')) {
+    return `Bisworanjan's verified technical skills:\n\n- **Programming Languages**: Python, Java, C\n- **AI / ML & Data Science**: Scikit-learn, NumPy, Pandas, Matplotlib, OpenCV, Supervised/Unsupervised Learning, Regression, Classification, SVM, Decision Trees, Clustering, PCA, Neural Networks\n- **Web & Backend**: FastAPI, Spring Boot, React.js, JavaScript, HTML5, CSS3, REST APIs\n- **Databases & Tools**: SQL, PostgreSQL, DBMS, Git, GitHub, Maven, VS Code, Jupyter Notebooks, AWS concepts`;
+  }
+
+  if (q.includes('resume') || q.includes('cv') || q.includes('download')) {
+    return `You can view and download Bisworanjan's official verified resume directly:\n\n- [Download Bisworanjan's Resume (PDF)](/resume.pdf)\n- Or visit the **Resume Center** on the portfolio to preview it online!`;
+  }
+
+  if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('reach') || q.includes('phone')) {
+    return `You can reach out to Bisworanjan directly through:\n\n- **Email**: bisworanjanpalar@gmail.com\n- **Phone**: +91 784 899 1691\n- **Location**: Bhubaneswar, Odisha, India\n- **LinkedIn**: [linkedin.com/in/bisworanjan-palar](https://www.linkedin.com/in/bisworanjan-palar)\n- **GitHub**: [github.com/250320100086-create](https://github.com/250320100086-create)`;
+  }
+
+  if (q.includes('education') || q.includes('college') || q.includes('university') || q.includes('degree') || q.includes('cgpa')) {
+    return `Bisworanjan's verified academic background:\n\n- **MCA (Specialization in AI & ML)**: Centurion University of Technology and Management (2025–2027) | **CGPA: 8.16**\n- **B.Sc. in Physics (Honours)**: Utkal University (2022–2025) | **CGPA: 7.46**\n- **12th Science**: The Guide Residential H.S. School / CHSE (70%)\n- **10th Secondary**: GOVT NP High School / BSE (61%)`;
+  }
+
+  if (q.includes('certificat') || q.includes('credential') || q.includes('oracle') || q.includes('internshala')) {
+    return `Bisworanjan holds **4 verified credentials**:\n\n1. **Oracle Certified Foundations Associate & Agentic AI Associate** (Oracle University | Credential ID: 103523797AAI26OFA)\n2. **Machine Learning with AI Certificate of Training** (Internshala Trainings | **Scored 98% Marks — Top Performer**)\n3. **Network Security Engineer Certificate of Participation** (Skill India Digital Hub / NSDC / NASSCOM)\n4. **Certificate Program in Machine Learning with AI** (Scholiverse Educare | Grade A)`;
+  }
+
+  if (q.includes('about') || q.includes('who are you') || q.includes('who is bisworanjan')) {
+    return `**Bisworanjan Palar** is an AI & Machine Learning Developer based in Bhubaneswar, Odisha, India. Currently pursuing his MCA in AI & ML at Centurion University (CGPA 8.16) and holding a B.Sc. in Physics from Utkal University (CGPA 7.46), he specializes in predictive models, computer vision systems, and backend RESTful architectures.`;
+  }
+
+  return null;
+}
+
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -179,7 +221,7 @@ export function Chatbot() {
         {
           id: generateId(),
           role: 'model',
-          content: "Hello! I am **BP's AI Assistant** 🤖 (*General AI & Portfolio Assistant*).\n\nI am a general-purpose AI chatbot powered by LLM technology. Ask me **anything in the world** — math, science, coding, literature, general knowledge, or details about Bisworanjan's portfolio & projects!",
+          content: "Hello! I am **BP's AI Assistant** 🤖 (*General AI & Portfolio Assistant*).\n\nAsk me anything about Bisworanjan's portfolio, AI/ML projects, skills, education, or general technical questions!",
           timestamp: new Date(),
         },
       ]);
@@ -215,7 +257,7 @@ export function Chatbot() {
     setIsLoading(true);
 
     try {
-      // Post full session message history to secure backend API route
+      // Post full session message history to backend API route
       const payload = newMessages.map((m) => ({
         role: m.role,
         content: m.content,
@@ -244,17 +286,31 @@ export function Chatbot() {
         },
       ]);
     } catch (err: any) {
-      console.error('[Chatbot API Error]', err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: generateId(),
-          role: 'model',
-          content: "Connection error: Unable to reach the backend AI server. Please check your connection and try again.",
-          timestamp: new Date(),
-          isError: true,
-        },
-      ]);
+      console.warn('[Chatbot API Error]', err);
+
+      // Check client-side verified answers first
+      const clientAnswer = getVerifiedClientAnswer(trimmed);
+      if (clientAnswer) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'model',
+            content: clientAnswer,
+            timestamp: new Date(),
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'model',
+            content: "I am currently running in offline portfolio mode. You can ask me about Bisworanjan's projects, skills, education, certifications, contact info, or download his resume!",
+            timestamp: new Date(),
+          },
+        ]);
+      }
     } finally {
       setIsLoading(false);
       isSendingRef.current = false;
@@ -352,6 +408,21 @@ export function Chatbot() {
             ))}
             {isLoading && <TypingIndicator />}
             <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Questions Strip */}
+          <div className="flex-shrink-0 px-3 py-2 bg-[#0C0D12] border-t border-[#1F212A]/60 flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
+            {SUGGESTED_QUESTIONS.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => sendMessage(q)}
+                disabled={isLoading}
+                className="whitespace-nowrap px-2.5 py-1 rounded-full bg-[#13141C] hover:bg-[#1A1C23] border border-[#2A2D3A] hover:border-fuchsia-500/40 text-[11px] text-gray-300 hover:text-white transition-colors flex-shrink-0 disabled:opacity-50"
+              >
+                {q}
+              </button>
+            ))}
           </div>
 
           {/* Input Form */}

@@ -86,37 +86,61 @@ export default defineConfig(() => {
                 );
 
                 if (isValidKey) {
-                  const ai = new GoogleGenAI({ apiKey: apiKey! });
-                  const contents = messages.map((m: any) => ({
-                    role: m.role === 'user' ? 'user' : 'model',
-                    parts: [{ text: m.content || m.text || '' }]
-                  }));
+                  try {
+                    const ai = new GoogleGenAI({ apiKey: apiKey! });
+                    const contents = messages.map((m: any) => ({
+                      role: m.role === 'user' ? 'user' : 'model',
+                      parts: [{ text: m.content || m.text || '' }]
+                    }));
 
-                  const response = await ai.models.generateContent({
-                    model: 'gemini-3.6-flash',
-                    contents,
-                    config: { systemInstruction: PORTFOLIO_SYSTEM_PROMPT }
-                  });
+                    const response = await ai.models.generateContent({
+                      model: 'gemini-3.6-flash',
+                      contents,
+                      config: { systemInstruction: PORTFOLIO_SYSTEM_PROMPT }
+                    });
 
-                  res.statusCode = 200;
-                  res.setHeader('Content-Type', 'application/json');
-                  res.end(JSON.stringify({ reply: response.text || "I couldn't generate a response." }));
-                  return;
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ reply: response.text || "I couldn't generate a response." }));
+                    return;
+                  } catch (llmErr: any) {
+                    // LLM API overloaded / network failure → fall through to verified fallback
+                    console.warn('[Chat API] Gemini LLM unavailable, using local fallback:', llmErr?.message);
+                  }
                 }
 
-                // Fallback if no API key set
+                // Fallback: verified knowledge base (no API key, or LLM overloaded)
                 const lastMsg = (messages[messages.length - 1]?.content || '').toLowerCase();
-                let fallbackAnswer = "I am **BP's AI Assistant** 🤖. I can answer any question about general knowledge, mathematics, programming, or Bisworanjan Palar's portfolio!";
-                if (lastMsg.includes('capital') && lastMsg.includes('odisha')) fallbackAnswer = "The capital of Odisha is **Bhubaneswar**.";
-                if (lastMsg.includes('capital') && lastMsg.includes('india')) fallbackAnswer = "The capital of India is **New Delhi**.";
-                if (lastMsg.includes('2') && lastMsg.includes('+') && lastMsg.includes('2')) fallbackAnswer = "2 + 2 = **4**.";
-                if (lastMsg.includes('machine learning')) fallbackAnswer = "**Machine Learning** is a branch of artificial intelligence focused on algorithms that learn from data experience to make predictions.";
-                if (lastMsg.includes('python')) fallbackAnswer = "**Python** is a high-level programming language famous for AI, machine learning, data science, and web APIs.";
+                let fallbackAnswer = "I am **BP's AI Assistant** 🤖. I can answer questions about Bisworanjan Palar's portfolio, AI/ML projects, skills, education, or general knowledge!";
+
+                if (lastMsg.includes('project') || lastMsg.includes('work') || lastMsg.includes('build')) {
+                  fallbackAnswer = "Bisworanjan has developed **5 featured AI & ML projects**:\n\n1. **CyberShield Analytics Platform** (Python, ML, FastAPI, SQL)\n2. **AI Drone Surveillance System** (Python, Computer Vision, FastAPI)\n3. **AI Chatbot** (Python, NLP, FastAPI, SQL, JS)\n4. **AI Student Attendance System** (Python, Face Recognition, FastAPI)\n5. **Heart Disease Prediction System** (Python, Scikit-learn, Flask)\n\nAll source code is available on [GitHub](https://github.com/250320100086-create).";
+                } else if (lastMsg.includes('technolog') || lastMsg.includes('skill') || lastMsg.includes('stack')) {
+                  fallbackAnswer = "Bisworanjan's technical skill set includes:\n\n- **Languages**: Python, Java, C\n- **AI & ML**: Scikit-learn, OpenCV, NumPy, Pandas, Matplotlib, Supervised/Unsupervised Learning, Regression, Classification, SVM, Decision Trees, PCA\n- **Web & Backend**: FastAPI, Spring Boot, React.js, JavaScript, HTML/CSS, REST APIs\n- **Tools & DBs**: SQL, PostgreSQL, Git, GitHub, Maven, AWS concepts";
+                } else if (lastMsg.includes('resume') || lastMsg.includes('cv') || lastMsg.includes('download')) {
+                  fallbackAnswer = "You can view and download Bisworanjan's official verified resume directly at [Download Resume PDF](/resume.pdf) or open the **Resume Center** on the portfolio!";
+                } else if (lastMsg.includes('contact') || lastMsg.includes('hire') || lastMsg.includes('email') || lastMsg.includes('phone')) {
+                  fallbackAnswer = "You can reach Bisworanjan directly:\n\n- **Email**: bisworanjanpalar@gmail.com\n- **Phone**: +91 784 899 1691\n- **Location**: Bhubaneswar, Odisha, India\n- **LinkedIn**: [linkedin.com/in/bisworanjan-palar](https://www.linkedin.com/in/bisworanjan-palar)\n- **GitHub**: [github.com/250320100086-create](https://github.com/250320100086-create)";
+                } else if (lastMsg.includes('education') || lastMsg.includes('college') || lastMsg.includes('cgpa')) {
+                  fallbackAnswer = "Bisworanjan's academic qualifications:\n\n- **MCA (AI & ML)**: Centurion University (2025–2027) | **CGPA: 8.16**\n- **B.Sc. Physics (Honours)**: Utkal University (2022–2025) | **CGPA: 7.46**\n- **12th Science**: CHSE Odisha (70%)\n- **10th**: BSE Odisha (61%)";
+                } else if (lastMsg.includes('certificat') || lastMsg.includes('credential')) {
+                  fallbackAnswer = "Bisworanjan holds **4 verified certifications**:\n\n1. **Oracle Certified Foundations & Agentic AI Associate**\n2. **Internshala ML Training** (98% Score — Top Performer)\n3. **NSDC Network Security Engineer**\n4. **Scholiverse ML with AI** (Grade A)";
+                } else if (lastMsg.includes('capital') && lastMsg.includes('odisha')) {
+                  fallbackAnswer = "The capital of Odisha is **Bhubaneswar**.";
+                } else if (lastMsg.includes('capital') && lastMsg.includes('india')) {
+                  fallbackAnswer = "The capital of India is **New Delhi**.";
+                } else if (lastMsg.includes('2') && lastMsg.includes('+') && lastMsg.includes('2')) {
+                  fallbackAnswer = "2 + 2 = **4**.";
+                } else if (lastMsg.includes('machine learning')) {
+                  fallbackAnswer = "**Machine Learning** is a branch of artificial intelligence focused on algorithms that learn from data experience to make predictions.";
+                } else if (lastMsg.includes('python')) {
+                  fallbackAnswer = "**Python** is a high-level programming language famous for AI, machine learning, data science, and web APIs.";
+                }
 
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({
-                  reply: fallbackAnswer + "\n\n*(Note: Set `AI_API_KEY` in `.env` to connect to live Gemini LLM)*"
+                  reply: fallbackAnswer
                 }));
               } catch (err: any) {
                 res.statusCode = 500;

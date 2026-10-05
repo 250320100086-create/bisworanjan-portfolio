@@ -90,6 +90,9 @@ const SKILL_CATEGORIES = [
   },
 ];
 
+import { SkillGlobe } from './SkillGlobe';
+import { SkillsRadar } from './SkillsRadar';
+
 export const Skills = memo(function Skills() {
   return (
     <section id="skills" className="py-10">
@@ -128,6 +131,17 @@ export const Skills = memo(function Skills() {
           </div>
         ))}
       </div>
+
+      {/* Interactive Skills Radar */}
+      <div className="mt-8">
+        <SkillsRadar />
+      </div>
+
+      {/* 3D Interactive Skill Globe */}
+      <div className="mt-8">
+        <SkillGlobe />
+      </div>
     </section>
   );
 });
+

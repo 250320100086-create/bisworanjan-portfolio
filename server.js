@@ -111,13 +111,31 @@ app.post('/api/chat', async (req, res) => {
 function generateDynamicFallback(input) {
   const q = input.trim().toLowerCase();
 
+  if (q.includes('project') || q.includes('work') || q.includes('build')) {
+    return "Bisworanjan has developed **5 featured AI & ML projects**:\n\n1. **CyberShield Analytics Platform** (Python, ML, FastAPI, SQL)\n2. **AI Drone Surveillance System** (Python, Computer Vision, FastAPI)\n3. **AI Chatbot** (Python, NLP, FastAPI, SQL, JS)\n4. **AI Student Attendance System** (Python, Face Recognition, FastAPI)\n5. **Heart Disease Prediction System** (Python, Scikit-learn, Flask)\n\nAll source code is available on [GitHub](https://github.com/250320100086-create).";
+  }
+  if (q.includes('technolog') || q.includes('skill') || q.includes('stack')) {
+    return "Bisworanjan's technical skills include:\n\n- **Languages**: Python, Java, C\n- **AI / ML**: Scikit-learn, OpenCV, NumPy, Pandas, Matplotlib, Supervised/Unsupervised Learning, Regression, Classification, SVM, Decision Trees, PCA\n- **Web & Backend**: FastAPI, Spring Boot, React.js, JavaScript, HTML/CSS, REST APIs\n- **Tools & DBs**: SQL, PostgreSQL, Git, GitHub, Maven, AWS concepts";
+  }
+  if (q.includes('resume') || q.includes('cv') || q.includes('download')) {
+    return "You can view and download Bisworanjan's official verified resume directly at [Download Resume PDF](/resume.pdf) or open the **Resume Center** on the portfolio!";
+  }
+  if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('phone')) {
+    return "You can reach Bisworanjan directly:\n\n- **Email**: bisworanjanpalar@gmail.com\n- **Phone**: +91 784 899 1691\n- **Location**: Bhubaneswar, Odisha, India\n- **LinkedIn**: [linkedin.com/in/bisworanjan-palar](https://www.linkedin.com/in/bisworanjan-palar)\n- **GitHub**: [github.com/250320100086-create](https://github.com/250320100086-create)";
+  }
+  if (q.includes('education') || q.includes('college') || q.includes('cgpa')) {
+    return "Bisworanjan's academic qualifications:\n\n- **MCA (AI & ML)**: Centurion University (2025–2027) | **CGPA: 8.16**\n- **B.Sc. Physics (Honours)**: Utkal University (2022–2025) | **CGPA: 7.46**\n- **12th Science**: CHSE Odisha (70%)\n- **10th**: BSE Odisha (61%)";
+  }
+  if (q.includes('certificat') || q.includes('credential')) {
+    return "Bisworanjan holds **4 verified certifications**:\n\n1. **Oracle Certified Foundations & Agentic AI Associate**\n2. **Internshala ML Training** (98% Score — Top Performer)\n3. **NSDC Network Security Engineer**\n4. **Scholiverse ML with AI** (Grade A)";
+  }
   if (q.includes('capital') && q.includes('odisha')) return "The capital of Odisha is **Bhubaneswar**.";
   if (q.includes('capital') && q.includes('india')) return "The capital of India is **New Delhi**.";
   if (q.includes('2') && q.includes('+') && q.includes('2')) return "2 + 2 = **4**.";
   if (q.includes('machine learning')) return "**Machine Learning** is a branch of artificial intelligence that enables systems to learn and improve from data experience without being explicitly programmed.";
   if (q.includes('python')) return "**Python** is a high-level, interpreted programming language famous for machine learning, data science, and web backends.";
 
-  return `I am **BP's AI Assistant** 🤖. I can answer any question about general knowledge, mathematics, programming, or Bisworanjan Palar's portfolio!`;
+  return `I am **BP's AI Assistant** 🤖. I can answer questions about general knowledge, programming, or Bisworanjan Palar's portfolio, projects, skills, education, and resume!`;
 }
 
 // Fallback all SPA routes to index.html

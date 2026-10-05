@@ -1,6 +1,6 @@
 import React, { useState, useRef, FormEvent } from 'react';
 import emailjs from '@emailjs/browser';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2, Github, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2, Github, Linkedin, Instagram, Copy, Check } from 'lucide-react';
 import { GITHUB_URL, LINKEDIN_URL, INSTAGRAM_URL, EMAIL_ADDRESS } from './Hero';
 
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID  as string | undefined;
@@ -48,6 +48,16 @@ export function Contact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSending, setIsSending] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(EMAIL_ADDRESS);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -163,18 +173,40 @@ export function Contact() {
           </div>
 
           <div className="space-y-4">
-            <a
-              href={`mailto:${EMAIL_ADDRESS}`}
-              className="flex items-center gap-4 p-3.5 bg-[#13141C] border border-[#1F212A] rounded-xl hover:border-fuchsia-500/40 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-lg bg-[#1A1C23] border border-[#2A2D3A] flex items-center justify-center text-fuchsia-400 group-hover:bg-fuchsia-500/10">
-                <Mail size={18} />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 font-medium">Email</p>
-                <p className="text-sm text-white font-medium">{EMAIL_ADDRESS}</p>
-              </div>
-            </a>
+            <div className="flex items-center justify-between p-3.5 bg-[#13141C] border border-[#1F212A] rounded-xl hover:border-fuchsia-500/40 transition-colors group">
+              <a
+                href={`mailto:${EMAIL_ADDRESS}`}
+                className="flex items-center gap-4 flex-1 min-w-0"
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#1A1C23] border border-[#2A2D3A] flex items-center justify-center text-fuchsia-400 group-hover:bg-fuchsia-500/10 flex-shrink-0">
+                  <Mail size={18} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs text-gray-400 font-medium">Email</p>
+                  <p className="text-sm text-white font-medium truncate">{EMAIL_ADDRESS}</p>
+                </div>
+              </a>
+
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                aria-label={copied ? 'Email copied' : 'Copy email address to clipboard'}
+                title={copied ? 'Copied!' : 'Copy Email'}
+                className="ml-2 px-2.5 py-1.5 bg-[#1A1C23] hover:bg-[#222530] border border-[#2A2D3A] hover:border-fuchsia-500/40 rounded-lg text-xs text-gray-300 hover:text-white transition-colors flex items-center gap-1.5 flex-shrink-0"
+              >
+                {copied ? (
+                  <>
+                    <Check size={13} className="text-emerald-400" />
+                    <span className="text-emerald-400 font-medium">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} className="text-gray-400" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
 
             <div className="flex items-center gap-4 p-3.5 bg-[#13141C] border border-[#1F212A] rounded-xl">
               <div className="w-10 h-10 rounded-lg bg-[#1A1C23] border border-[#2A2D3A] flex items-center justify-center text-blue-400">
@@ -228,6 +260,43 @@ export function Contact() {
         {/* Contact Form */}
         <div className="lg:col-span-2">
           <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-4 bg-[#13141C] border border-[#1F212A] p-6 md:p-8 rounded-2xl">
+            {/* Hire / Collaboration Mode Selector */}
+            <div>
+              <label className="block text-xs font-medium text-gray-300 mb-2">
+                Inquiry Type / Intent:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: 'Hire Me', subject: 'Opportunity: Full-time / Direct Role' },
+                  { label: 'Internship', subject: 'Inquiry: AI/ML Engineering Internship' },
+                  { label: 'Freelance', subject: 'Project: Freelance / Contract Development' },
+                  { label: 'Collaboration', subject: 'Collaboration: Research / Open Source' },
+                  { label: 'Project Discussion', subject: 'Discussion: AI Architecture & Consulting' },
+                ].map((mode) => (
+                  <button
+                    key={mode.label}
+                    type="button"
+                    onClick={() => {
+                      setForm((prev) => ({
+                        ...prev,
+                        subject: mode.subject,
+                      }));
+                      if (errors.subject) {
+                        setErrors((prev) => ({ ...prev, subject: undefined }));
+                      }
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+                      form.subject === mode.subject
+                        ? 'bg-fuchsia-600 text-white border-fuchsia-500 shadow-sm'
+                        : 'bg-[#1A1C23] text-gray-300 border-[#2A2D3A] hover:border-fuchsia-500/40 hover:text-white'
+                    }`}
+                  >
+                    {mode.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-300 mb-1">Your Name *</label>

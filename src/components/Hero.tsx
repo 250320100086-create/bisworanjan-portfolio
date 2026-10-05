@@ -1,13 +1,18 @@
 import React, { useRef } from 'react';
-import { Send, Download, ArrowRight, MapPin, Mail, Github, Linkedin, Instagram } from "lucide-react";
+import { Send, Download, ArrowRight, MapPin, Mail, Github, Linkedin, Instagram, FileText } from "lucide-react";
 import profilePhoto from "./assets/images/profile.jpg";
+import { AvailabilityBadge } from './AvailabilityBadge';
 
 export const INSTAGRAM_URL = "https://www.instagram.com/s1punn._/?__pwa=1";
 export const GITHUB_URL = "https://github.com/250320100086-create";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/bisworanjan-palar";
 export const EMAIL_ADDRESS = "bisworanjanpalar@gmail.com";
 
-export function Hero() {
+interface HeroProps {
+  onOpenResumeCenter?: () => void;
+}
+
+export function Hero({ onOpenResumeCenter }: HeroProps = {}) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -59,6 +64,7 @@ export function Hero() {
           <a href="#home" className="text-white hover:text-fuchsia-400 transition-colors">Home</a>
           <a href="#skills" className="text-gray-400 hover:text-white transition-colors">Skills</a>
           <a href="#projects" className="text-gray-400 hover:text-white transition-colors">Projects</a>
+          <a href="#github" className="text-gray-400 hover:text-white transition-colors">GitHub</a>
           <a href="#education" className="text-gray-400 hover:text-white transition-colors">Education</a>
           <a href="#experience" className="text-gray-400 hover:text-white transition-colors">Experience</a>
           <a href="#certifications" className="text-gray-400 hover:text-white transition-colors">Certifications</a>
@@ -79,9 +85,12 @@ export function Hero() {
         {/* Left Column */}
         <div className="flex-1 space-y-6">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#13141C] border border-[#2A2D3A] text-xs text-gray-300">
-              <MapPin size={13} className="text-fuchsia-400" />
-              <span>Bhubaneswar, Odisha, India</span>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#13141C] border border-[#2A2D3A] text-xs text-gray-300">
+                <MapPin size={13} className="text-fuchsia-400" />
+                <span>Bhubaneswar, Odisha, India</span>
+              </div>
+              <AvailabilityBadge />
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
@@ -102,13 +111,22 @@ export function Hero() {
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
               onClick={scrollToProjects}
               className="py-3 px-6 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2 shadow-lg shadow-fuchsia-500/20 group hover:scale-[1.02] active:scale-[0.98]"
             >
               View My Work <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
+
+            {onOpenResumeCenter && (
+              <button
+                onClick={onOpenResumeCenter}
+                className="py-3 px-5 border border-fuchsia-500/40 bg-[#13141C] hover:bg-[#1A1C23] text-white rounded-xl text-sm font-medium transition-all flex items-center gap-2 group hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <FileText size={16} className="text-fuchsia-400" /> Resume Center
+              </button>
+            )}
 
             <a
               href="/resume.pdf"
